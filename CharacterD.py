@@ -1,6 +1,7 @@
 import pygame
 from load_image import load_image
 
+
 character_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 ui_group = pygame.sprite.Group()
@@ -23,7 +24,10 @@ class EnemyD(pygame.sprite.Sprite):
 class UiSkils(pygame.sprite.Sprite):
     def __init__(self, id):
         super().__init__(ui_group, all_sprites)
+        self.id = id
         self.image = load_image(id)
+        self.rect = self.image.get_rect()
+        self.used = False
 
 
 def load_skills(spisok):
