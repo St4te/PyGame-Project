@@ -1,14 +1,11 @@
 import pygame
-from CharacterD import PlayerD
-
+from Character import Character
 
 
 def draw_Hp(screen, character):
-    #max_hp = character.max_hp
-    #hp = character.hp
-    max_hp = 10
-    hp = 10
-    if isinstance(character, PlayerD) is False:
+    max_hp = character.max_hp
+    hp = character.hp
+    if isinstance(character, Character) is False:
         pygame.draw.rect(screen, (200, 200, 200), (1096, 10, 250, 20), 100)
         pygame.draw.rect(screen, (255, 0, 0), (1096, 10, 250 * (hp / max_hp), 20), 100)
         pygame.draw.rect(screen, (0, 0, 0), (1096, 10, 250, 20), 3)
@@ -25,10 +22,8 @@ def draw_Hp(screen, character):
 
 
 def draw_Mana(screen, character):
-    #max_mana = character.max_mana
-    #mana = character.mana
-    max_mana = 5
-    mana = 5
+    max_mana = character.max_mana
+    mana = character.mana
     pygame.draw.rect(screen, (200, 200, 200), (20, 50, 180, 20), 100)
     pygame.draw.rect(screen, (30, 30, 255), (20, 50, 180 * (mana / max_mana), 20), 100)
     pygame.draw.rect(screen, (0, 0, 0), (20, 50, 180, 20), 3)
@@ -38,9 +33,8 @@ def draw_Mana(screen, character):
 
 
 def draw_Shield(screen, character):
-    #shield = character.shield
-    shield = 22
-    if isinstance(character, PlayerD) is False:
+    shield = character.shield
+    if isinstance(character, Character) is False:
         font = pygame.font.Font(None, 30)
         text = font.render(f"{shield}", True, (255, 255, 255))
         screen.blit(text, (1314 - 4 * (len(str(shield)) - 1), 115 - 4 * (len(str(shield)) - 1)))
