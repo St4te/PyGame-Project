@@ -27,5 +27,3 @@ class EndStep(pygame.sprite.Sprite):
         super().__init__(back_group, all_sprites)
         #self.image =
         pass
-
-
