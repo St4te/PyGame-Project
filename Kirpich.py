@@ -1,10 +1,11 @@
 from random import randint
+from Enemy import *
 
 
 
 class Kirpich(Enemy):
     def __init__(self, curse, artifacts):
-        super().__init__(20, 20, 0, 4, curse, artifacts)
+        super().__init__(20, 20, 0, 4, curse, artifacts, 'werewolf-clipart-lg.png')
 
     def attack(self, character):
         character.mana = character.max_mana
@@ -18,7 +19,7 @@ class Kirpich(Enemy):
             self.pattern3(character)
 
     def pattern1(self, character):
-        character.hp -= 3
+        character.hp -= 10
 
     def pattern2(self):
         self.hp += 1
