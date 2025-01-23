@@ -6,9 +6,8 @@ class Card:
         con = sqlite3.connect("cards_bd1.sqlite")
         cur = con.cursor()
         res = cur.execute("SELECT * FROM cards WHERE id = " + str(card_id)).fetchall()
-        print(res)
         self.id = card_id
-        self.name = res[0][1]
+        self.location = res[0][1]
         self.element = res[0][2]
         self.mana = res[0][3]
         self.damage = res[0][4]
@@ -21,11 +20,21 @@ class Card:
         self.permanent = res[0][11]
         self.anpermanent = res[0][12]
         self.special = res[0][13]
+        self.uses = 1
+        self.can_use = True
+
+    def use(self):
+        self.uses -= 1
+        if self.uses <= 0:
+            self.can_use = False
 
     def apply_card(self, character, enemy):
-        character.shield = self.shield
-        character.hp += self.heal
-        if character.hp > character.max_hp:
-            character.hp = character.max_hp
-        character.mana -= self.mana
-        enemy.hp -= self.damage
+        if self.can_use:
+            character.shield = self.shield
+            character.hp += self.heal
+            if character.hp > character.max_hp:
+                character.hp = character.max_hp
+            character.mana -= self.mana
+            enemy.hp -= self.damage
+        else:
+            print('Использованно')
