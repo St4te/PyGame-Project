@@ -2,6 +2,7 @@ import pygame
 from Character import Character
 
 
+
 def draw_Hp(screen, character):
     max_hp = character.max_hp
     hp = character.hp
@@ -23,10 +24,13 @@ def draw_Hp(screen, character):
 
 def draw_Mana(screen, character):
     max_mana = character.max_mana
+    new_max = 1
     mana = character.mana
+    if mana > max_mana:
+        new_max = mana / max_mana
     pygame.draw.rect(screen, (200, 200, 200), (20, 50, 180, 20), 100)
     pygame.draw.rect(screen, (30, 30, 255), (20, 50, 180 * (mana / max_mana), 20), 100)
-    pygame.draw.rect(screen, (0, 0, 0), (20, 50, 180, 20), 3)
+    pygame.draw.rect(screen, (0, 0, 0), (20, 50, 180 * new_max, 20), 3)
     font = pygame.font.Font(None, 25)
     text = font.render(f"{mana}", True, (240, 228, 0))
     screen.blit(text, (24, 52))
