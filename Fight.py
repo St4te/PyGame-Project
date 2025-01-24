@@ -21,13 +21,14 @@ class Fight:
         self.ui_group = ui_group
         self.character_group = character_group
         self.back_group = back_group
+        self.all_sprites = all_sprites
         self.player = PlayerD(self.character)
         self.enemyD = EnemyD(self.enemy)
         self.back = Background('задник-04.png')
         self.shield_p = Shield('щит.png', self.player)
         self.shield_e = Shield('щит.png', self.enemyD)
 
-    def start(self):
+    def start(self, screen):
         enemy_live = True
         charecter_live = True
         while enemy_live == True and charecter_live == True:
@@ -72,12 +73,30 @@ class Fight:
             self.enemy.attack(self.character)
             charecter_live = self.character.is_live()
             enemy_live = self.enemy.is_live()
-        self.game_over()
+        self.game_over(screen)
 
 
-    def game_over(self):
-        print('Game over')
+    def game_over(self, screen):
+        screen.fill((0,0,0))
+        font = pygame.font.Font(None, 170)
+        text = font.render('GAME OVER!', True, (255, 0, 0))
+        pygame.draw.rect(screen, (255, 0, 0), (270, 270, 810, 170), 15)
+        screen.blit(text, (300, 300))
+        pygame.display.flip()
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        running = False
+        self.ui_group.empty()
+        self.back_group.empty()
+        self.character_group.empty()
+        self.all_sprites.empty()
 
+        fight = Fight(3, None, 1, 1, 2, 3, 4, None)
+
+        fight.start(screen)
 
 
 if __name__ == '__main__':
@@ -93,7 +112,6 @@ if __name__ == '__main__':
 
     fight = Fight(3, None, 1, 1, 2, 3, 4, None)
 
-    fight.start()
-
+    fight.start(screen)
     pygame.quit()
 
