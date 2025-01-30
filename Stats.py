@@ -46,3 +46,11 @@ def draw_Shield(screen, character):
         font = pygame.font.Font(None, 30)
         text = font.render(f"{shield}", True, (255, 255, 255))
         screen.blit(text, (44 - 4  * (len(str(shield)) - 1), 115 - 4 * (len(str(shield)) - 1)))
+
+
+def draw_allstats(screen, character, enemy):
+    draw_Hp(screen, character)
+    draw_Hp(screen, enemy)
+    draw_Mana(screen, character)
+    draw_Shield(screen, character)
+    draw_Shield(screen, enemy)
