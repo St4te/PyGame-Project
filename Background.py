@@ -22,8 +22,13 @@ class Shield(pygame.sprite.Sprite):
         else:
             self.rect = self.image.get_rect().move(0, 100)
 
-class EndStep(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__(back_group, all_sprites)
-        #self.image =
-        pass
+class Element(pygame.sprite.Sprite):
+    def __init__(self, element):
+        super().__init__(back_group)
+        self.image = pygame.transform.scale(load_image('огонь.png'), (81, 81))
+        self.rect = self.image.get_rect().move(650, 10)
+
+def draw_game_over(screen):
+    font = pygame.font.Font(None, 100)
+    text = font.render('GAME OVER!', True, (255, 0, 0))
+    screen.blit(text, (300, 300))
