@@ -20,7 +20,7 @@ class Card:
         self.permanent = res[0][11]
         self.anpermanent = res[0][12]
         self.special = res[0][13]
-        self.uses = 1
+        self.uses = res[0][14]
         self.can_use = True
 
     def use(self):
@@ -30,11 +30,15 @@ class Card:
 
     def apply_card(self, character, enemy):
         if self.can_use:
-            character.shield = self.shield
+            character.shield += self.shield
             character.hp += self.heal
             if character.hp > character.max_hp:
                 character.hp = character.max_hp
             character.mana -= self.mana
-            enemy.hp -= self.damage
+            if self.damage <= enemy.shield:
+                enemy.shield -= self.damage
+            else:
+                enemy.hp += enemy.shield - self.damage
+                enemy.shield = 0
         else:
             print('Использованно')
