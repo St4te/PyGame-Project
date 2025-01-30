@@ -1,5 +1,5 @@
 class Enemy:
-    def __init__(self, max_hp, hp, shield, protection, curse, artifacts, location):
+    def __init__(self, max_hp, hp, shield, protection, curse, artifacts, location, element):
         self.hp = hp
         self.max_hp = max_hp
         self.protection = protection
@@ -7,6 +7,7 @@ class Enemy:
         self.curse = curse
         self.artifacts = artifacts
         self.location = location
+        self.element = element
 
 
     def attack(self):
