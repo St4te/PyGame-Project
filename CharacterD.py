@@ -12,8 +12,14 @@ class PlayerD(pygame.sprite.Sprite):
         super().__init__(character_group, all_sprites)
         self.obj = obj
         self.name = obj.location
-        self.image = pygame.transform.scale(load_image(obj.location), (300, 248))
+        self.frames = [load_image('позиция1.png'), load_image('позиция2.png'), load_image('позиция3.png'), load_image('позиция4.png'), load_image('позиция5.png'), load_image('позиция6.png'), load_image('позиция6.png'), load_image('позиция5.png'), load_image('позиция4.png'), load_image('позиция3.png'), load_image('позиция2.png'), load_image('позиция1.png'), ]
+        self.cur_image = 0
+        self.image = pygame.transform.scale(self.frames[self.cur_image], (333, 222))
         self.rect = self.image.get_rect().move(20,216)
+
+    def update(self):
+        self.cur_image = (self.cur_image + 1) % len(self.frames)
+        self.image = pygame.transform.scale(self.frames[self.cur_image], (333, 222))
 
 
 class EnemyD(pygame.sprite.Sprite):
@@ -21,8 +27,14 @@ class EnemyD(pygame.sprite.Sprite):
         super().__init__(character_group, all_sprites)
         self.obj = obj
         self.name = obj.location
-        self.image = pygame.transform.scale(load_image(obj.location), (300, 248))
+        self.frames = [load_image('враг-поз1.png'), load_image('враг-поз2.png'), load_image('враг-поз3.png'), load_image('враг-поз4.png'), load_image('враг-поз5.png'), load_image('враг-поз5.png'), load_image('враг-поз4.png'), load_image('враг-поз3.png'), load_image('враг-поз2.png'), load_image('враг-поз1.png'), ]
+        self.cur_image = 0
+        self.image = pygame.transform.scale(self.frames[self.cur_image], (365, 243))
         self.rect = self.image.get_rect().move(1048,216)
+
+    def update(self):
+        self.cur_image = (self.cur_image + 1) % len(self.frames)
+        self.image = pygame.transform.scale(self.frames[self.cur_image], (365, 243))
 
 
 class UiSkils(pygame.sprite.Sprite):
@@ -49,4 +61,3 @@ def load_skills(spisok):
         skilui.rect = skilui.image.get_rect().move(30 + 149 * (not_inf - 1) + distance * (place - 1), 520)
         if place == 4:
             place += 5
-
