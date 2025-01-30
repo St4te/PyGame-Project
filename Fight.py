@@ -4,7 +4,9 @@ from Card import *
 from Character import *
 from Enemy import *
 from Kirpich import *
-from get_enemy import get_enemy
+from sqlite3 import *
+from Menu import *
+from get_enemy import *
 from get_clicked import clicked_endBtn, clicked_sprite
 from load_image import *
 from Background import *
@@ -15,51 +17,50 @@ from get_MousePos import *
 
 class Fight:
 
-    def __init__(self, max_mana, curse, enemy_id, card1_id, card2_id, card3_id, card4_id, artifacts):
-        self.enemy = get_enemy(enemy_id, curse, artifacts)
-        self.character = Character(curse, artifacts, max_mana, card1_id, card2_id, card3_id, card4_id)
+    def __init__(self, max_mana, curse, enemy_id, character, artifacts, element):
+        self.enemy = get_enemy(enemy_id, curse, artifacts, element)
+        self.character = character
         self.ui_group = ui_group
         self.character_group = character_group
         self.back_group = back_group
-        self.all_sprites = all_sprites
         self.player = PlayerD(self.character)
         self.enemyD = EnemyD(self.enemy)
-        self.back = Background('задник-04.png')
+        self.back = Background('задник_Монтажная область 1.png')
+        Element('1314')
         self.shield_p = Shield('щит.png', self.player)
         self.shield_e = Shield('щит.png', self.enemyD)
 
     def start(self, screen):
         enemy_live = True
         charecter_live = True
+        clock = pygame.time.Clock()
+        sprite_change_time = 0
+        sprite_change_interval = 1 / 6
         while enemy_live == True and charecter_live == True:
-            cards = self.character.generate_cards()
             screen.fill((0,0,0))
-            load_skills(cards)
+            load_skills(self.character.cards)
             self.back_group.draw(screen)
             self.character_group.draw(screen)
             self.ui_group.draw(screen)
-            draw_Hp(screen, self.character)
-            draw_Hp(screen, self.enemy)
-            draw_Mana(screen, self.character)
-            draw_Shield(screen, self.enemy)
-            draw_Shield(screen, self.character)
+            draw_allstats(screen, self.character, self.enemy)
             running = True
             while running:
+                screen.fill((0, 0, 0))
+                back_group.draw(screen)
+                character_group.draw(screen)
+                ui_group.draw(screen)
+                draw_allstats(screen, self.character, self.enemy)
+                sprite_change_time += clock.get_time() / 1000.0  # Получаем время с последнего кадра в секундах
+                if sprite_change_time >= sprite_change_interval:
+                    self.enemyD.update()
+                    self.player.update()  # Смена спрайта
+                    sprite_change_time = 0
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         clicked = clicked_sprite(self.ui_group, get_MousePos())
                         if clicked != False:
-                            cards = self.character.attack(clicked, self.enemy, cards)
-                            screen.fill((0,0,0))
-                            load_skills(cards)
-                            back_group.draw(screen)
-                            character_group.draw(screen)
-                            ui_group.draw(screen)
-                            draw_Hp(screen, self.character)
-                            draw_Hp(screen, self.enemy)
-                            draw_Mana(screen, self.character)
-                            draw_Shield(screen, self.enemy)
-                            draw_Shield(screen, self.character)
+                            self.character.attack(clicked, self.enemy)
+                            load_skills(self.character.cards)
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RETURN:
                             running = False
@@ -67,21 +68,30 @@ class Fight:
                         running = False
                         pygame.quit()
                         sys.exit()
-                    pygame.display.flip()
+                pygame.display.flip()
                 if not self.enemy.is_live():
                     break
+                clock.tick(60)
+            self.character.generate_cards()
             self.enemy.attack(self.character)
             charecter_live = self.character.is_live()
             enemy_live = self.enemy.is_live()
-        self.game_over(screen)
+        return self.game_over(screen, enemy_live)
 
 
-    def game_over(self, screen):
-        screen.fill((0,0,0))
+    def game_over(self,screen, enemy_live):
+        next = False
+        screen.fill((0, 0, 0))
         font = pygame.font.Font(None, 170)
-        text = font.render('GAME OVER!', True, (255, 0, 0))
-        pygame.draw.rect(screen, (255, 0, 0), (270, 270, 810, 170), 15)
-        screen.blit(text, (300, 300))
+        if enemy_live:
+            text = font.render('GAME OVER!', True, (255, 0, 0))
+            pygame.draw.rect(screen, (255, 0, 0), (270, 270, 810, 170), 15)
+            screen.blit(text, (300, 300))
+        else:
+            text = font.render('WINNER!', True, (0, 255, 0))
+            pygame.draw.rect(screen, (0, 255, 0), (270, 270, 810, 170), 15)
+            screen.blit(text, (420, 300))
+            next = True
         pygame.display.flip()
         running = True
         while running:
@@ -89,29 +99,14 @@ class Fight:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         running = False
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
         self.ui_group.empty()
         self.back_group.empty()
         self.character_group.empty()
-        self.all_sprites.empty()
 
-        fight = Fight(3, None, 1, 1, 2, 3, 4, None)
-
-        fight.start(screen)
-
-
-if __name__ == '__main__':
-
-    pygame.init()
-    pygame.display.set_caption('Игра')
-    size = WIDTH, HEIGHT = 1366, 768
-    screen = pygame.display.set_mode(size)
-    screen.fill((0, 0, 0))
-    pygame.display.flip()
-
-    running = True
-
-    fight = Fight(3, None, 1, 1, 2, 3, 4, None)
-
-    fight.start(screen)
-    pygame.quit()
-
+        print(self.ui_group.empty(),
+        self.back_group.empty(),
+        self.character_group.empty())
+        return next
