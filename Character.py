@@ -6,6 +6,9 @@ from Card import *
 class Character:
     def __init__(self, curse, artifacts, mana, max_hp, hp):
         self.curse = curse
+        self.level = 1
+        self.stage = 1
+        #self.get_progress()
         self.location = 'warrior-clipart-lg.png'
         self.artifacts = artifacts
         self.max_mana = mana
@@ -24,8 +27,11 @@ class Character:
         self.max_hp = max_hp
         self.shield = 0
         self.protection = 0
+        self.coins = 0
 
     def generate_cards(self):
+        self.mana = self.max_mana
+        #self.shield = 0
         con = sqlite3.connect("cards_bd1.sqlite")
         cur = con.cursor()
         res = cur.execute("SELECT id, rare FROM cards WHERE anpermanent = 1").fetchall()
@@ -65,3 +71,40 @@ class Character:
         if self.hp <= 0:
             return False
         return True
+
+    def buy(self, price, delta_max_hp, delta_hp, delta_max_mana):
+        if price <= self.coins:
+            self.coins -= price
+            self.max_hp += delta_max_hp
+            self.hp += delta_hp
+            if self.hp > self.max_hp:
+                self.hp = self.max_hp
+            self.max_mana += delta_max_mana
+
+    def get_record(self):
+        con = sqlite3.connect("saves_bd.sqlite")
+        cur = con.cursor()
+        res = cur.execute("SELECT level, stage FROM saves WHERE id = 2").fetchall()
+        return res[0][:]
+
+    def get_progress(self):
+        con = sqlite3.connect("saves_bd.sqlite")
+        cur = con.cursor()
+        res = cur.execute("SELECT level, stage FROM saves WHERE id = 1").fetchall()
+        self.level, self.stage = res[0][:]
+
+    def set_progress(self):
+        con = sqlite3.connect("saves_bd.sqlite")
+        cur = con.cursor()
+        res_record = cur.execute("SELECT level, stage FROM saves WHERE id = 2").fetchall()
+        s1 = '''UPDATE saves
+    SET level = '''
+        s2 = ''', stage = '''
+        s3 = '''
+    WHERE id = '''
+        s = s1 + str(self.level) + s2 + str(self.stage)
+        if res_record[0][0] < self.level or res_record[0][0] == self.level and res_record[0][1] < self.stage:
+            cur.execute(s)
+        else:
+            cur.execute(s + s3 + '1')
+        con.commit()
