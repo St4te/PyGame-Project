@@ -8,7 +8,6 @@ class qw3(Enemy):
         super().__init__(15, 15, 1, 4, curse, artifacts, 'werewolf-clipart-lg.png', element)
 
     def attack(self, character):
-        character.mana = character.max_mana
         self.shield = 0
         a = randint(1, 100)
         if a <= 45:
