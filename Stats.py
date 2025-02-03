@@ -2,7 +2,6 @@ import pygame
 from Character import Character
 
 
-
 def draw_Hp(screen, character):
     max_hp = character.max_hp
     hp = character.hp
