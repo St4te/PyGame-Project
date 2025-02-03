@@ -7,9 +7,10 @@ back_group = pygame.sprite.Group()
 
 
 class Background(pygame.sprite.Sprite):
-    def __init__(self, id):
+    def __init__(self, element):
         super().__init__(back_group, all_sprites)
-        self.image = pygame.transform.scale(load_image(id), (1366, 768))
+        self.elements = {1: 'задник_Монтажная область 1.png', 2 : 'задник-02.png', 3 : 'задник-03.png', 4 : 'задник-04.png'}
+        self.image = pygame.transform.scale(load_image(self.elements[element]), (1366, 768))
         self.rect = self.image.get_rect().move(0,0)
 
 
