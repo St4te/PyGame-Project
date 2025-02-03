@@ -2,15 +2,12 @@ from random import randint
 from Enemy import *
 
 
-
 class Kirpich(Enemy):
     def __init__(self, curse, artifacts, element):
         super().__init__(20, 20, 0, 4, curse, artifacts, 'werewolf-clipart-lg.png', element)
 
     def attack(self, character):
-        character.mana = character.max_mana
         self.shield = 0
-
 
         a = randint(1, 100)
         if a <= 60:
@@ -19,7 +16,6 @@ class Kirpich(Enemy):
             self.pattern2()
         else:
             self.pattern3(character)
-
 
         if self.element == 1:
             damage = 1
@@ -34,7 +30,6 @@ class Kirpich(Enemy):
                 self.hp = self.max_hp
         elif self.element == 3:
             self.shield += 1
-
 
     def pattern1(self, character):
         damage = 10
