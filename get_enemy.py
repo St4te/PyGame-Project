@@ -1,4 +1,6 @@
+from Earthworm import Earthworm
 from Kirpich import *
+from Pepelny_demon import Pepelny_demon
 from qw1 import *
 from qw2 import *
 from qw3 import *
@@ -16,6 +18,11 @@ def get_enemy(enemy_id,  curse, artifacts, element):
         return qw3(curse, artifacts, element)
     if enemy_id == 5:
         return qw4(curse, artifacts, element)
+    if enemy_id == -1:
+        return Pepelny_demon(curse, artifacts, element)
+    if enemy_id == -2:
+        return Earthworm(curse, artifacts, element)
+
 
 def det_rand_enemy_id(a, is_boss):
     if not is_boss:
@@ -24,4 +31,6 @@ def det_rand_enemy_id(a, is_boss):
             b = randint(1, 5)
         return b
     else:
-        pass
+        return randint(-2, -1)
+
+
